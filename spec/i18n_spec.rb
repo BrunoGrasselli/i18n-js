@@ -62,6 +62,12 @@ describe SimplesIdeias::I18n do
     Rails.root.join(SimplesIdeias::I18n.export_dir, "translations.js").should be_file
   end
 
+  it "exports messages using jQuery.extend to merge it" do
+    SimplesIdeias::I18n.export!
+    messages_file = File.read(Rails.root.join(SimplesIdeias::I18n.export_dir, "translations.js"))
+    messages_file.should match /I18n\.translations = \$\.extend\(true, I18n.translations,.*\);/
+  end
+
   it "exports messages using the default configuration file" do
     set_config "default.yml"
     SimplesIdeias::I18n.should_receive(:save).with(translations, "public/javascripts/translations.js")
